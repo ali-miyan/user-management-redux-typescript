@@ -32,7 +32,6 @@ export const useAuthentication = () => {
 export const useAdminAuthentication = () => {
     const [isFetching, setIsFetching] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
     const [adminAuth] = useAdminAuthMutation();
 
     useEffect(() => {

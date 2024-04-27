@@ -82,7 +82,6 @@ const EditModal = ({
         formData.append("image", file);
       }
 
-
       const response = await editUser(formData).unwrap()
       console.log(response,'respon');
       

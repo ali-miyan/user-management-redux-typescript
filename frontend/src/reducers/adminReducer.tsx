@@ -15,6 +15,12 @@ export const api = createApi({
         method: "GET",
       }),
     }),
+    searchUser: builder.mutation({
+      query: (query) => ({
+        url: `/get-user?search=${query}`,
+        method: "GET",
+      }),
+    }),
     adminLogin: builder.mutation({
       query: (body) => ({
         url: "/login",
@@ -62,4 +68,5 @@ export const {
   useEditUserMutation,
   useDeleteUserMutation,
   useAddUserMutation,
+  useSearchUserMutation
 } = api;

@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   validateEmail,
   validateName,
   validatePassword,
 } from "../../../pages/user/validation";
-import { notifyError } from "../../../pages/user/Toast";
+import { notifyError, notifySuccess } from "../../../pages/user/Toast";
 import { useAddUserMutation } from "../../../reducers/adminReducer";
+import { useAdminAuthentication } from "../../../Hooks/isAuthHook";
 
 const AddUser = () => {
   const [addUser, { isLoading }] = useAddUserMutation();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,6 +30,8 @@ const AddUser = () => {
     password: "",
     serverError: "",
   });
+
+  const { isLoggedIn, isFetching } = useAdminAuthentication();
 
   const validateForm = () => {
     const nameError = validateName(name);
@@ -48,15 +52,40 @@ const AddUser = () => {
     return <div>loading......</div>;
   }
 
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isLoggedIn) {
+    navigate("/admin");
+    return null;
+  }
+
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('password', password);
+    if(image){
+      formData.append('image', image);
+    }
+
     try {
-      const response = await addUser({ name, email, password }).unwrap();
+      const response = await addUser(formData).unwrap();
 
       if (!response.email) {
-        console.log('d');
-        
+        setError((prev) => ({
+          ...prev,
+          serverError: response.message,
+        }));
+      }
+
+      if (response.status) {
+        notifySuccess(response.message);
+        navigate("/admin-dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -68,6 +97,7 @@ const AddUser = () => {
     <div className="w-96 mt-24 max-w-xs text-center">
       <span className="font-bold underline">ADD USER</span>
       <form className="bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <span className="text-red-600">{error.serverError}</span>
         <div className="mb-4 flex justify-center">
           <label className="w-20 h-20 rounded-full overflow-hidden cursor-pointer">
             <img

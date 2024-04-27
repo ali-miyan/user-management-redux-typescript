@@ -7,15 +7,30 @@ import { config } from 'dotenv';
 config();
 
 
-
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
-    console.log('dddddddddddd');
-    
-    const userData = await User.find({})
-    if (userData.length > 0) {
-        res.json({status:true, data:userData})
+    console.log('server');
+    console.log(req.query.search);
+
+    const searchQuery = req.query.search;
+    let userData:never[];
+
+    if (searchQuery) {
+        userData = await User.find({
+            $or: [
+                { email: { $regex: searchQuery, $options: 'i' } }
+            ]
+        });
     } else {
-        res.json({ user: false, message: 'no users found' })
+        userData = await User.find({});
+    }
+
+    console.log(userData);
+    
+
+    if (userData.length > 0) {
+        res.json({ status: true, data: userData });
+    } else {
+        res.json({ status: false, message: 'No users found' });
     }
 });
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
@@ -63,7 +78,12 @@ export const auth = asyncHandler(async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
     try {
-      const { username, email, password } = req.body;
+        let img = ""
+      const { name, email, password } = req.body;
+
+      if (req.file && req.file.filename) {
+        img = req.file.filename;
+      }
   
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -73,11 +93,11 @@ export const addUser = async (req: Request, res: Response) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new User({
-        username,
+        name,
         email,
         password: hashedPassword,
+        imgUrl:img
       });
-  
       await newUser.save();
       res.json({status:true, message:'User created successfully'});
   

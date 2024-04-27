@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   useGetUserDataMutation,
   useDeleteUserMutation,
+  useSearchUserMutation,
 } from "../../../reducers/adminReducer";
 import { UserData } from "../../../types/userType";
 import { notifyError } from "../../../pages/user/Toast";
@@ -9,24 +10,40 @@ import { useAdminAuthentication } from "../../../Hooks/isAuthHook";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import EditModal from "./DashboardModal";
+import { FaSearch } from "react-icons/fa";
 
-const Dashboard = () => {
+const   Dashboard = () => {
+  const [searchUser] = useSearchUserMutation();
   const [getUserData, { error }] = useGetUserDataMutation({});
   const [deleteUser, { isError }] = useDeleteUserMutation({});
   const navigate = useNavigate();
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [search, setSearch] = useState<string>();
 
   const handleFormSubmitSuccess = () => {
     console.log("Form submit successful!");
     setFormSubmitted(!formSubmitted);
   };
 
+  const handleSearch = async(e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+    const response = await searchUser(e.target.value).unwrap()
+
+    console.log(response.status,response.data,'ddddddddddd');
+    
+    if(response.data == undefined){
+      setUserData([])
+    }else{
+      setUserData(response.data);
+    }
+
+  }
+
   const [userData, setUserData] = useState<UserData[]>([]);
   const { isLoggedIn, isFetching } = useAdminAuthentication();
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUserData, setSelectedUserData] = useState<UserData>(Object);
-  console.log(isLoggedIn, "login");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +89,24 @@ const Dashboard = () => {
     });
   };
 
+  const handleLogOut = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out!",
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonColor: "#2e7d32",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        document.cookie =
+          "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        navigate("/admin");
+      }
+    });
+  };
+
   if (isFetching) {
     return <div>Loading...</div>;
   }
@@ -89,6 +124,12 @@ const Dashboard = () => {
   return (
     <>
       <div className="mt-20">
+        <button
+          onClick={handleLogOut}
+          className="absolute top-4 right-4 bg-red-500 hover:bg-red-800 text-white px-4 py-2 rounded-md"
+        >
+          Logout
+        </button>
         <h1 className="text-center text-5xl font-bold mb-8 text-gray-900">
           <span className="text-green-600">WELCOME</span> ADMIN
           <svg
@@ -106,10 +147,29 @@ const Dashboard = () => {
         </h1>
 
         <div className="flex justify-center items-center mt-6 mb-5">
-          <Link to = '/add-user' className="bg-gray-700 hover:bg-gray-950 text-white py-3 px-6 rounded-md">
+          <Link
+            to="/add-user"
+            className="bg-gray-700 hover:bg-gray-950 text-white py-3 px-6 rounded-md"
+          >
             Add User +
           </Link>
         </div>
+
+        <div className="flex justify-center items-center mb-6">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch />
+            </div>  
+            <input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={handleSearch}
+              className="border bg-white border-gray-400 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:border-green-500"
+            />
+          </div>
+        </div>
+
 
         <div className="overflow-x-auto mb-16 w-full">
           <div className="p-1.5 w-full inline-block align-middle">

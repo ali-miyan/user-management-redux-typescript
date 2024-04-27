@@ -10,7 +10,7 @@ router.post('/login', adminLogin);
 router.get('/auth-admin',authenticateAdmin, auth);
 router.put('/edit-user',uploadProfile, editUser);
 router.delete('/delete-user/:id', deleteUser);
-router.post('/add-user',addUser);
+router.post('/add-user',uploadProfile,addUser);
 
 
 export default router;

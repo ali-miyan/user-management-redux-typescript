@@ -12,7 +12,7 @@ const Modal = ({
   modalOpen: boolean;
   toggleModal: () => void;
 }) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const userData = JSON.parse(localStorage.getItem("user")!);
   const userName = userData ? userData.name : "name";
