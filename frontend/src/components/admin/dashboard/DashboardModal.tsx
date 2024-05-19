@@ -8,21 +8,17 @@ const EditModal = ({
   modalOpen,
   toggleModal,
   userData,
-  onSubmitSuccess
+  onSubmitSuccess,
 }: {
   modalOpen: boolean;
   toggleModal: () => void;
   userData: UserData;
   onSubmitSuccess: () => void;
 }) => {
+  const [editUser, { isLoading }] = useEditUserMutation();
 
-
-  const [ editUser,{isLoading}] = useEditUserMutation()
-
-  
-
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     setName(userData.name);
@@ -43,12 +39,11 @@ const EditModal = ({
         ? `public/userImages/${userData.imgUrl}`
         : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     );
-  },[userData]);
+  }, [userData]);
 
-  if(isLoading){
-    return <div>LOADING......</div>
-}
-
+  if (isLoading) {
+    return <div>LOADING......</div>;
+  }
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -82,11 +77,10 @@ const EditModal = ({
         formData.append("image", file);
       }
 
-      const response = await editUser(formData).unwrap()
-      console.log(response,'respon');
-      
+      const response = await editUser(formData).unwrap();
+      console.log(response, "respon");
 
-      if(!response.status) {
+      if (!response.status) {
         setError((prev) => ({
           ...prev,
           serverError: response.message,
