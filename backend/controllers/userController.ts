@@ -3,8 +3,9 @@ import asyncHandler from 'express-async-handler'
 import User from "../models/userModel";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
-config();
+import { uploadToCloudinary } from "../middleware/multerMiddleware";
+require("dotenv").config();
+
 
 
 
@@ -45,7 +46,7 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
     if (user) {
         const check = await bcrypt.compare(password, user.password);
         if (check) {
-            const token = jwt.sign({ email: user.email }, process.env.WEB_TOKEN, { expiresIn: '1d' })
+            const token = jwt.sign({ email: user.email }, process.env.WEB_TOKEN as string, { expiresIn: '1d' })
             res.cookie('token', token)
 
             const userData = {
@@ -67,12 +68,15 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
 export const editUser = asyncHandler(async (req: Request, res: Response) => {
     let img = '';
 
-    if (req.file && req.file.filename) {
-        img = req.file.filename;
+    console.log(req.file);  
+    
+
+    if (req.file) {
+        img = await uploadToCloudinary(req.file.buffer);
     } else {
         const existingUser = await User.findById(req.body.id);
         if (existingUser) {
-            img = existingUser.imgUrl;
+            img = existingUser.imgUrl as string;
         }
     }
 

@@ -3,6 +3,7 @@ import { UserData } from "../../../types/userType";
 import { validateEmail, validateName } from "../../../pages/user/validation";
 import { notifyError, notifySuccess } from "../../../pages/user/Toast";
 import { useEditUserMutation } from "../../../reducers/adminReducer";
+import Loader from "../../../helpers/Loader";
 
 const EditModal = ({
   modalOpen,
@@ -36,13 +37,13 @@ const EditModal = ({
   useEffect(() => {
     setImg(
       userData.imgUrl
-        ? `public/userImages/${userData.imgUrl}`
+        ? `${userData.imgUrl}`
         : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
     );
   }, [userData]);
 
   if (isLoading) {
-    return <div>LOADING......</div>;
+    <Loader isLoading />
   }
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +152,7 @@ const EditModal = ({
                       <img
                         src={file ? URL.createObjectURL(file) : img}
                         alt="Modal Image"
-                        className="mx-auto rounded-full w-16 h-16 mb-5 hover:cursor-pointer"
+                        className="mx-auto rounded-full w-16 h-16 mb-5 object-cover hover:cursor-pointer"
                       />
                       <input
                         id="upload-image"

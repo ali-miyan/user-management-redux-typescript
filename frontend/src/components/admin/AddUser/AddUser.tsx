@@ -8,6 +8,7 @@ import {
 import { notifyError, notifySuccess } from "../../../pages/user/Toast";
 import { useAddUserMutation } from "../../../reducers/adminReducer";
 import { useAdminAuthentication } from "../../../Hooks/isAuthHook";
+import Loader from "../../../helpers/Loader";
 
 const AddUser = () => {
   const [addUser, { isLoading }] = useAddUserMutation();
@@ -49,11 +50,11 @@ const AddUser = () => {
   };
 
   if (isLoading) {
-    return <div>loading......</div>;
+    <Loader isLoading />
   }
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   if (!isLoggedIn) {

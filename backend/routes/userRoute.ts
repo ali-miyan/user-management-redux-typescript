@@ -1,7 +1,7 @@
 import express from 'express'
 import { signUp,login,auth,logout, editUser,getUser } from '../controllers/userController';
 import {authenticateAdmin, authenticateUser} from '../middleware/authMiddleware';
-import { uploadProfile } from '../middleware/multerMiddleware';
+import {upload} from '../middleware/multerMiddleware';
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/auth',authenticateUser, auth);
 router.post('/signup', signUp);
 router.post('/login', login);
-router.post('/edit-user',uploadProfile, editUser);
+router.post('/edit-user',upload.single('image'), editUser);
 router.post('/logout', logout);
 router.post('/get-user', getUser);
 

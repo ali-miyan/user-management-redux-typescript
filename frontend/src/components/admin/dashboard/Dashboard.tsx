@@ -11,8 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import EditModal from "./DashboardModal";
 import { FaSearch } from "react-icons/fa";
+import Loader from "../../../helpers/Loader";
 
-const   Dashboard = () => {
+const Dashboard = () => {
   const [searchUser] = useSearchUserMutation();
   const [getUserData, { error }] = useGetUserDataMutation({});
   const [deleteUser, { isError }] = useDeleteUserMutation({});
@@ -25,19 +26,18 @@ const   Dashboard = () => {
     setFormSubmitted(!formSubmitted);
   };
 
-  const handleSearch = async(e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
-    const response = await searchUser(e.target.value).unwrap()
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    const response = await searchUser(e.target.value).unwrap();
 
-    console.log(response.status,response.data,'ddddddddddd');
-    
-    if(response.data == undefined){
-      setUserData([])
-    }else{
+    console.log(response.status, response.data, "ddddddddddd");
+
+    if (response.data == undefined) {
+      setUserData([]);
+    } else {
       setUserData(response.data);
     }
-
-  }
+  };
 
   const [userData, setUserData] = useState<UserData[]>([]);
   const { isLoggedIn, isFetching } = useAdminAuthentication();
@@ -108,7 +108,7 @@ const   Dashboard = () => {
   };
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   if (!isLoggedIn) {
@@ -159,7 +159,7 @@ const   Dashboard = () => {
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FaSearch />
-            </div>  
+            </div>
             <input
               type="text"
               placeholder="Search..."
@@ -169,7 +169,6 @@ const   Dashboard = () => {
             />
           </div>
         </div>
-
 
         <div className="overflow-x-auto mb-16 w-full">
           <div className="p-1.5 w-full inline-block align-middle">
@@ -226,10 +225,10 @@ const   Dashboard = () => {
                           <img
                             src={
                               item.imgUrl
-                                ? `/public/userImages/${item.imgUrl}`
+                                ? `${item.imgUrl}`
                                 : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                             }
-                            className="rounded-md font-  overflow-hidden m-2 w-14 h-14"
+                            className="rounded-md overflow-hidden object-cover m-2 w-14 h-14"
                             alt="Your Photo"
                           />
                         </td>

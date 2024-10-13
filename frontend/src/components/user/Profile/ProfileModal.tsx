@@ -17,7 +17,7 @@ const Modal = ({
   const userData = JSON.parse(localStorage.getItem("user")!);
   const userName = userData ? userData.name : "name";
   const userEmail = userData ? userData.email : "email";
-  const userImage = userData.imgUrl ?  `/public/userImages/${userData.imgUrl}` : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+  const userImage = userData.imgUrl ?  `${userData.imgUrl}` : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
   const [name, setName] = useState(userName);
   const [email, setEmail] = useState(userEmail);
@@ -125,7 +125,7 @@ console.log(img,'ddddd',userImage);
                 <img
                   src={img?img:userImage}
                   alt="Modal Image"
-                  className="mx-auto rounded-full w-16 h-16 mb-5 hover:cursor-pointer"
+                  className="mx-auto rounded-full object-cover w-16 h-16 mb-5 hover:cursor-pointer"
                 />
                 <input
                   id="upload-image"

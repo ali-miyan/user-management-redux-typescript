@@ -11,7 +11,7 @@ export const authenticateUser = (req: any, res: any, next: NextFunction) => {
         return res.json({status:false,message:'not token availale'})
     }
 
-    jwt.verify(token, process.env.WEB_TOKEN, (err: any, decoded: any) => {
+    jwt.verify(token, process.env.WEB_TOKEN as string, (err: any, decoded: any) => {
         if (err) {
             return res.json({status:false, message: 'Unauthorized' });
         }
@@ -20,7 +20,6 @@ export const authenticateUser = (req: any, res: any, next: NextFunction) => {
     });
 };
 export const authenticateAdmin = (req: any, res: any, next: NextFunction) => {
-    console.log('cccccccccccccccccccccccccccccc');
     
     const token = req.cookies.adminToken;
 
@@ -28,7 +27,7 @@ export const authenticateAdmin = (req: any, res: any, next: NextFunction) => {
         return res.json({status:false,message:'not token availale'})
     }
 
-    jwt.verify(token, process.env.WEB_TOKEN, (err: any, decoded: any) => {
+    jwt.verify(token, process.env.WEB_TOKEN as string, (err: any, decoded: any) => {
         if (err) {
             return res.json({status:false, message: 'Unauthorized' });
         }

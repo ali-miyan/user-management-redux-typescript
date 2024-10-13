@@ -1,11 +1,20 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist"
-    },
-    "lib": ["es2015"]
-  }
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./backend",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "backend/**/*.ts",
+    "backend/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
+}  

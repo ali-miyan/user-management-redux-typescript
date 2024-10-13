@@ -7,6 +7,7 @@ import api from "../../../api/api";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../reducers/userAuthReducer";
 import {useAuthentication} from "../../../Hooks/isAuthHook";
+import Loader from "../../../helpers/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Login = () => {
     return null;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -9,6 +9,7 @@ import {
 // import { setUser } from "../../../reducers/userAuthReducer";
 import { useAdminLoginMutation } from "../../../reducers/adminReducer";
 import { useAdminAuthentication } from "../../../Hooks/isAuthHook";
+import Loader from "../../../helpers/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const Login = () => {
   const [adminLogin, { error}] = useAdminLoginMutation();
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   if(isLoggedIn){

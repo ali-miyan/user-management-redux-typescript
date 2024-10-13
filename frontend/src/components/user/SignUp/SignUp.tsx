@@ -5,6 +5,7 @@ import { sighUpState } from "../../../types/signUpType";
 import { validateEmail, validateName, validatePassword } from "../../../pages/user/validation";
 import api from "../../../api/api";
 import {useAuthentication} from "../../../Hooks/isAuthHook";
+import Loader from "../../../helpers/Loader";
 
 
 const SignupForm = () => {
@@ -43,7 +44,7 @@ const SignupForm = () => {
     return null;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

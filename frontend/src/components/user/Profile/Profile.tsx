@@ -6,6 +6,7 @@ import api from "../../../api/api";
 import { notifySuccess, notifyError } from "../../../pages/user/Toast";
 import { useState } from "react";
 import Modal from "./ProfileModal";
+import Loader from "../../../helpers/Loader";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Profile = () => {
   const userEmail = userData ? userData.email : "useremail";
   const userImage =
     userData && userData.imgUrl
-      ? `/public/userImages/${userData?.imgUrl}`
+      ? `${userData?.imgUrl}`
       : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
   if (!isLoggedIn) {
@@ -32,7 +33,7 @@ const Profile = () => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    <Loader isLoading />
   }
 
   const handleLogout = async () => {
@@ -57,7 +58,7 @@ const Profile = () => {
       <p className="mt-3 text-center text-white">WELCOME HOME</p>
         <div className="flex flex-col items-center pb-10">
           <img
-            className="w-20 h-20 mb-3 rounded-full shadow-lg mt-5"
+            className="w-20 h-20 mb-3 rounded-full object-cover shadow-lg mt-5"
             src={userImage}
             alt="Loading..."
           />
