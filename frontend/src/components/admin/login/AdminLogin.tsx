@@ -44,7 +44,7 @@ const Login = () => {
   const [adminLogin, { error}] = useAdminLoginMutation();
 
   if (isFetching) {
-    <Loader isLoading />
+    return <Loader isLoading />
   }
 
   if(isLoggedIn){

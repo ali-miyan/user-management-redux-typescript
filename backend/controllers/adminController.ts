@@ -63,7 +63,13 @@ export const adminLogin = asyncHandler(
         process.env.WEB_TOKEN as string,
         { expiresIn: "1d" }
       );
-      res.cookie("adminToken", token);
+      res.cookie("adminToken", token, {
+        httpOnly: false,
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
 
       const adminData = {
         adminId,

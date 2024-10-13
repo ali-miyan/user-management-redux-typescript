@@ -63,7 +63,12 @@ exports.adminLogin = (0, express_async_handler_1.default)((req, res) => __awaite
         const adminId = generateAdminId();
         console.log("correct");
         const token = jsonwebtoken_1.default.sign({ email, adminId }, process.env.WEB_TOKEN, { expiresIn: "1d" });
-        res.cookie("adminToken", token);
+        res.cookie("adminToken", token, {
+            httpOnly: false,
+            secure: true,
+            sameSite: "none",
+            maxAge: 24 * 60 * 60 * 1000,
+        });
         const adminData = {
             adminId,
             email,

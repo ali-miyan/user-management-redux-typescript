@@ -20,54 +20,59 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const multerMiddleware_1 = require("../middleware/multerMiddleware");
 require("dotenv").config();
 exports.auth = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({ status: true, message: 'welcome to home' });
+    res.json({ status: true, message: "welcome to home" });
 }));
 exports.signUp = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    console.log('ddd');
+    console.log("ddd");
     const existingUser = yield userModel_1.default.findOne({ email });
     if (existingUser) {
-        console.log('dd1');
-        res.json({ status: false, message: 'This email already exists' });
+        console.log("dd1");
+        res.json({ status: false, message: "This email already exists" });
         return;
     }
     const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
     const newUser = new userModel_1.default({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
     });
     yield newUser.save();
-    res.json({ status: true, message: 'Signed up successfully!' });
+    res.json({ status: true, message: "Signed up successfully!" });
 }));
 exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    console.log('login');
+    console.log("login");
     const user = yield userModel_1.default.findOne({ email });
     console.log(process.env.WEB_TOKEN);
     if (user) {
         const check = yield bcryptjs_1.default.compare(password, user.password);
         if (check) {
-            const token = jsonwebtoken_1.default.sign({ email: user.email }, process.env.WEB_TOKEN, { expiresIn: '1d' });
-            res.cookie('token', token);
+            const token = jsonwebtoken_1.default.sign({ email: user.email }, process.env.WEB_TOKEN, { expiresIn: "1d" });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                maxAge: 24 * 60 * 60 * 1000,
+            });
             const userData = {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                imgUrl: user.imgUrl ? user.imgUrl : ""
+                imgUrl: user.imgUrl ? user.imgUrl : "",
             };
-            res.json({ status: true, message: 'Login successful!', userData });
+            res.json({ status: true, message: "Login successful!", userData });
         }
         else {
-            res.json({ status: false, message: 'Invalid email or password.' });
+            res.json({ status: false, message: "Invalid email or password." });
         }
     }
     else {
-        res.json({ status: false, message: 'User not found.' });
+        res.json({ status: false, message: "User not found." });
     }
 }));
 exports.editUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let img = '';
+    let img = "";
     console.log(req.file);
     if (req.file) {
         img = yield (0, multerMiddleware_1.uploadToCloudinary)(req.file.buffer);
@@ -85,19 +90,23 @@ exports.editUser = (0, express_async_handler_1.default)((req, res) => __awaiter(
             id: user._id,
             name: user.name,
             email: user.email,
-            imgUrl: user.imgUrl
+            imgUrl: user.imgUrl,
         };
-        res.json({ status: true, message: 'Successfully edited', userData });
+        res.json({ status: true, message: "Successfully edited", userData });
     }
     else {
-        res.json({ status: false, message: 'User not found' });
+        res.json({ status: false, message: "User not found" });
     }
 }));
 exports.getUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    res.json({ status: true, message: 'logged out successfully' });
+    res.json({ status: true, message: "logged out successfully" });
 }));
 exports.logout = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.clearCookie('token');
-    res.json({ status: true, message: 'logged out successfully' });
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    });
+    res.json({ status: true, message: "logged out successfully" });
 }));
