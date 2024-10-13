@@ -24,4 +24,5 @@ app.use("/api/users", userRoute_1.default);
 app.use("/api/admin", adminRoute_1.default);
 app.use(errorMiddleware_1.pageNotFound);
 app.use(errorMiddleware_1.errorHandler);
+app.listen(port);
 exports.default = app;

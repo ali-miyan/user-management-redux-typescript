@@ -12,7 +12,7 @@ const router = express_1.default.Router();
 router.get('/auth', authMiddleware_1.authenticateUser, userController_1.auth);
 router.post('/signup', userController_1.signUp);
 router.post('/login', userController_1.login);
-router.post('/edit-user', multerMiddleware_1.uploadProfile, userController_1.editUser);
+router.post('/edit-user', multerMiddleware_1.upload.single('image'), userController_1.editUser);
 router.post('/logout', userController_1.logout);
 router.post('/get-user', userController_1.getUser);
 exports.default = router;

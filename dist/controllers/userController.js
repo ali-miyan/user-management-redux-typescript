@@ -17,8 +17,8 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
+const multerMiddleware_1 = require("../middleware/multerMiddleware");
+require("dotenv").config();
 exports.auth = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ status: true, message: 'welcome to home' });
 }));
@@ -68,8 +68,9 @@ exports.login = (0, express_async_handler_1.default)((req, res) => __awaiter(voi
 }));
 exports.editUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let img = '';
-    if (req.file && req.file.filename) {
-        img = req.file.filename;
+    console.log(req.file);
+    if (req.file) {
+        img = yield (0, multerMiddleware_1.uploadToCloudinary)(req.file.buffer);
     }
     else {
         const existingUser = yield userModel_1.default.findById(req.body.id);

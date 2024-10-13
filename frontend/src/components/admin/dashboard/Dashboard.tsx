@@ -69,7 +69,7 @@ const Dashboard = () => {
       confirmButtonColor: "#2e7d32",
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
+    }).then(async (result:any) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteUser(id).unwrap();
@@ -98,7 +98,7 @@ const Dashboard = () => {
       confirmButtonColor: "#2e7d32",
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
+    }).then(async (result:any) => {
       if (result.isConfirmed) {
         document.cookie =
           "adminToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
