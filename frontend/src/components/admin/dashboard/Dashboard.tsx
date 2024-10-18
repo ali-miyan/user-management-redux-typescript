@@ -15,8 +15,8 @@ import Loader from "../../../helpers/Loader";
 
 const Dashboard = () => {
   const { isLoggedIn, isFetching } = useAdminAuthentication();
-  const [deleteUser, { isError }] = useDeleteUserMutation({});
-  const [getUserData, { error }] = useGetUserDataMutation({});
+  const [deleteUser] = useDeleteUserMutation({});
+  const [getUserData] = useGetUserDataMutation({});
   const [searchUser] = useSearchUserMutation();
   const navigate = useNavigate();
   const [formSubmitted, setFormSubmitted] = useState(false);
