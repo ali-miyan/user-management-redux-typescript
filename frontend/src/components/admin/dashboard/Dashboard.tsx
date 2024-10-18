@@ -14,9 +14,10 @@ import { FaSearch } from "react-icons/fa";
 import Loader from "../../../helpers/Loader";
 
 const Dashboard = () => {
-  const [searchUser] = useSearchUserMutation();
-  const [getUserData, { error }] = useGetUserDataMutation({});
+  const { isLoggedIn, isFetching } = useAdminAuthentication();
   const [deleteUser, { isError }] = useDeleteUserMutation({});
+  const [getUserData, { error }] = useGetUserDataMutation({});
+  const [searchUser] = useSearchUserMutation();
   const navigate = useNavigate();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [search, setSearch] = useState<string>();
@@ -40,7 +41,6 @@ const Dashboard = () => {
   };
 
   const [userData, setUserData] = useState<UserData[]>([]);
-  const { isLoggedIn, isFetching } = useAdminAuthentication();
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUserData, setSelectedUserData] = useState<UserData>(Object);
@@ -106,19 +106,13 @@ const Dashboard = () => {
       }
     });
   };
-
-  if (isFetching) {
-    <Loader isLoading />
-  }
-
+  
   if (!isLoggedIn) {
     navigate("/admin");
     return null;
   }
-
-  if (error || isError) {
-    console.error("Error fetching user data:", error, isError);
-    return <div>Error fetching user data. Please try again later.</div>;
+  if (isFetching) {
+    <Loader isLoading />
   }
 
   return (
